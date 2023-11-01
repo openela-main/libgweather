@@ -1,0 +1,40 @@
+From 88461473c20a6a7e4d61d144de083340d65eb75a Mon Sep 17 00:00:00 2001
+From: Bastien Nocera <hadess@hadess.net>
+Date: Wed, 18 Jul 2018 13:50:23 +0200
+Subject: [PATCH] build: Don't use a full path inside generated enum header
+
+It causes multilib problems.
+---
+ libgweather/gweather-enum-types.c.tmpl | 2 +-
+ libgweather/gweather-enum-types.h.tmpl | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/libgweather/gweather-enum-types.c.tmpl b/libgweather/gweather-enum-types.c.tmpl
+index 4430bda8..fe1f7c4d 100644
+--- a/libgweather/gweather-enum-types.c.tmpl
++++ b/libgweather/gweather-enum-types.c.tmpl
+@@ -7,7 +7,7 @@
+ /*** END file-header ***/
+ 
+ /*** BEGIN file-production ***/
+-/* enumerations from "@filename@" */
++/* enumerations from "@basename@" */
+ /*** END file-production ***/
+ 
+ /*** BEGIN value-header ***/
+diff --git a/libgweather/gweather-enum-types.h.tmpl b/libgweather/gweather-enum-types.h.tmpl
+index 3ca19950..d50063da 100644
+--- a/libgweather/gweather-enum-types.h.tmpl
++++ b/libgweather/gweather-enum-types.h.tmpl
+@@ -14,7 +14,7 @@ G_BEGIN_DECLS
+ 
+ /*** BEGIN file-production ***/
+ 
+-/* enumerations from "@filename@" */
++/* enumerations from "@basename@" */
+ /*** END file-production ***/
+ 
+ /*** BEGIN value-header ***/
+-- 
+GitLab
+

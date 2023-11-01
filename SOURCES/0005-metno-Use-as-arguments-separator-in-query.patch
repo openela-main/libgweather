@@ -1,0 +1,30 @@
+From 1e3706da2a737e78c879847d31c55226c990b338 Mon Sep 17 00:00:00 2001
+From: Bastien Nocera <hadess@hadess.net>
+Date: Tue, 12 Jan 2021 14:22:28 +0100
+Subject: [PATCH 5/7] metno: Use "&" as arguments separator in query
+
+According to the HTML5 spec ";" is no longer allowed. This was
+automatically rewritten in Varnish, but was temporary measure
+and was likely to disappear if on cache/load balancer change.
+
+Closes: #72
+---
+ libgweather/weather-yrno.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/libgweather/weather-yrno.c b/libgweather/weather-yrno.c
+index 13ee8537..e5c2e75a 100644
+--- a/libgweather/weather-yrno.c
++++ b/libgweather/weather-yrno.c
+@@ -597,7 +597,7 @@ yrno_start_open_new (GWeatherInfo *info)
+     g_ascii_dtostr (latstr, sizeof(latstr), RADIANS_TO_DEGREES (loc->latitude));
+     g_ascii_dtostr (lonstr, sizeof(lonstr), RADIANS_TO_DEGREES (loc->longitude));
+ 
+-    url = g_strdup_printf("https://" API_ENDPOINT_DOMAIN "/weatherapi/locationforecast/2.0/classic?lat=%s;lon=%s", latstr, lonstr);
++    url = g_strdup_printf("https://" API_ENDPOINT_DOMAIN "/weatherapi/locationforecast/2.0/classic?lat=%s&lon=%s", latstr, lonstr);
+ 
+     message = soup_message_new ("GET", url);
+     _gweather_info_begin_request (info, message);
+-- 
+2.30.2
+

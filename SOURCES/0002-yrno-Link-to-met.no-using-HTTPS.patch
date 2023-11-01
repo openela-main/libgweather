@@ -1,0 +1,25 @@
+From 3f2f1fd8ee361798dbe4e677978a40b748749b1d Mon Sep 17 00:00:00 2001
+From: Bastien Nocera <hadess@hadess.net>
+Date: Mon, 26 Aug 2019 15:01:05 +0300
+Subject: [PATCH 2/7] yrno: Link to met.no using HTTPS
+
+---
+ libgweather/weather-yrno.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/libgweather/weather-yrno.c b/libgweather/weather-yrno.c
+index 39803b4e..d01075bf 100644
+--- a/libgweather/weather-yrno.c
++++ b/libgweather/weather-yrno.c
+@@ -504,7 +504,7 @@ parse_forecast_xml_new (GWeatherInfo    *master_info,
+ 
+        That's very nice of them!
+     */
+-    priv->forecast_attribution = g_strdup(_("Weather data from the <a href=\"http://www.met.no/\">Norwegian Meteorological Institute</a>"));
++    priv->forecast_attribution = g_strdup(_("Weather data from the <a href=\"https://www.met.no/\">Norwegian Meteorological Institute</a>"));
+ 
+  out:
+     xmlXPathFreeContext (xpath_ctx);
+-- 
+2.30.2
+
