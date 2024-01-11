@@ -1,0 +1,41 @@
+From 42c4136039af5bfb4cb0d351131994ea57577d7f Mon Sep 17 00:00:00 2001
+From: Bastien Nocera <hadess@hadess.net>
+Date: Mon, 26 Aug 2019 14:55:12 +0300
+Subject: [PATCH 1/7] GWeatherWeather: Always set a user-agent when doing
+ queries
+
+This should fix IWIN queries not working (403) because it didn't
+appreciate the lack of user-agent.
+---
+ libgweather/gweather-weather.c | 2 ++
+ meson.build                    | 1 +
+ 2 files changed, 3 insertions(+)
+
+diff --git a/libgweather/gweather-weather.c b/libgweather/gweather-weather.c
+index 571a3e0b..62543169 100644
+--- a/libgweather/gweather-weather.c
++++ b/libgweather/gweather-weather.c
+@@ -595,6 +595,8 @@ ref_session (void)
+ 	return g_object_ref (session);
+ 
+     session = soup_session_new ();
++    g_object_set (G_OBJECT (session), SOUP_SESSION_USER_AGENT,
++                  "libgweather/" LIBGWEATHER_VERSION " (+https://gitlab.gnome.org/GNOME/libgweather/) ", NULL);
+ 
+     cache = get_cache ();
+     if (cache != NULL) {
+diff --git a/meson.build b/meson.build
+index 67261ad6..43490631 100644
+--- a/meson.build
++++ b/meson.build
+@@ -56,6 +56,7 @@ config_h.set_quoted('LOCALEDIR', join_paths(datadir, 'locale'))
+ config_h.set_quoted('GNOMELOCALEDIR', join_paths(datadir, 'locale'))
+ config_h.set_quoted('G_LOG_DOMAIN', 'GWeather')
+ config_h.set_quoted('GWEATHER_XML_LOCATION_DIR', pkgdatadir)
++config_h.set_quoted('LIBGWEATHER_VERSION', meson.project_version())
+ 
+ if c_compiler.has_member('struct tm', 'tm_gmtoff', prefix: '#include <time.h>')
+   config_h.set('HAVE_TM_TM_GMOFF', 1)
+-- 
+2.30.2
+

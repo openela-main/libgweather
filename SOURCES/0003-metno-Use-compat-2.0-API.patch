@@ -1,0 +1,44 @@
+From 3df75414d865829274ddc64d30ada98ca08fba3b Mon Sep 17 00:00:00 2001
+From: Bastien Nocera <hadess@hadess.net>
+Date: Thu, 7 Jan 2021 15:14:40 +0100
+Subject: [PATCH 3/7] metno: Use compat 2.0 API
+
+Version 1.9, which we were using, was deprecated and will be removed soon,
+so migrate to the compat XML output of the v2.0 API.
+
+Closes: #65
+---
+ libgweather/weather-yrno.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/libgweather/weather-yrno.c b/libgweather/weather-yrno.c
+index d01075bf..7a46fbae 100644
+--- a/libgweather/weather-yrno.c
++++ b/libgweather/weather-yrno.c
+@@ -37,7 +37,7 @@
+ 
+ #define XC(t) ((const xmlChar *)(t))
+ 
+-/* Reference for symbols at http://om.yr.no/forklaring/symbol/ */
++/* Reference for symbols at https://api.met.no/weatherapi/weathericon/2.0/ */
+ typedef struct {
+     int code;
+     GWeatherSky sky;
+@@ -589,12 +589,12 @@ yrno_start_open_new (GWeatherInfo *info)
+     if (!loc->latlon_valid)
+ 	return FALSE;
+ 
+-    /* see the description here: https://api.met.no/ */
++    /* see the description here: https://api.met.no/weatherapi/locationforecast/2.0/documentation */
+ 
+     g_ascii_dtostr (latstr, sizeof(latstr), RADIANS_TO_DEGREES (loc->latitude));
+     g_ascii_dtostr (lonstr, sizeof(lonstr), RADIANS_TO_DEGREES (loc->longitude));
+ 
+-    url = g_strdup_printf("https://api.met.no/weatherapi/locationforecast/1.9/?lat=%s;lon=%s", latstr, lonstr);
++    url = g_strdup_printf("https://api.met.no/weatherapi/locationforecast/2.0/classic?lat=%s;lon=%s", latstr, lonstr);
+ 
+     message = soup_message_new ("GET", url);
+     _gweather_info_begin_request (info, message);
+-- 
+2.30.2
+

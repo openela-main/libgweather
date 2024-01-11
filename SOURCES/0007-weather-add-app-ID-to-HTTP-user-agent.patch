@@ -1,0 +1,66 @@
+From 9e04624edff61f381365485565477f5302a2b93e Mon Sep 17 00:00:00 2001
+From: Michael Catanzaro <mcatanzaro@gnome.org>
+Date: Fri, 19 Mar 2021 15:45:52 -0500
+Subject: [PATCH 7/7] weather: add app ID to HTTP user agent
+
+met.no has requested we add the app ID even if we cannot provide
+application contact info. See #82.
+---
+ libgweather/gweather-weather.c | 34 ++++++++++++++++++++++++++++++++--
+ 1 file changed, 32 insertions(+), 2 deletions(-)
+
+diff --git a/libgweather/gweather-weather.c b/libgweather/gweather-weather.c
+index 62543169..f81aa7e2 100644
+--- a/libgweather/gweather-weather.c
++++ b/libgweather/gweather-weather.c
+@@ -583,6 +583,37 @@ dump_and_unref_cache (SoupCache *cache)
+ 
+ static SoupSession *static_session;
+ 
++static const char *
++app_id (void)
++{
++    GApplication *app = g_application_get_default ();
++    const char *id;
++
++    if (app) {
++        id = g_application_get_application_id (app);
++        if (id)
++            return id;
++    }
++
++    return g_get_prgname ();
++}
++
++static char *
++compute_user_agent (void)
++{
++    return g_strdup_printf ("libgweather/%s (+https://gitlab.gnome.org/GNOME/libgweather/) (%s) ", LIBGWEATHER_VERSION, app_id ());
++}
++
++static const char *
++user_agent (void)
++{
++  static GOnce once = G_ONCE_INIT;
++
++  g_once (&once, compute_user_agent, NULL);
++
++  return once.retval;
++}
++
+ static SoupSession *
+ ref_session (void)
+ {
+@@ -595,8 +626,7 @@ ref_session (void)
+ 	return g_object_ref (session);
+ 
+     session = soup_session_new ();
+-    g_object_set (G_OBJECT (session), SOUP_SESSION_USER_AGENT,
+-                  "libgweather/" LIBGWEATHER_VERSION " (+https://gitlab.gnome.org/GNOME/libgweather/) ", NULL);
++    g_object_set (G_OBJECT (session), SOUP_SESSION_USER_AGENT, user_agent (), NULL);
+ 
+     cache = get_cache ();
+     if (cache != NULL) {
+-- 
+2.30.2
+
